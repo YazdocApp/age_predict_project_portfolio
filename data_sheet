@@ -1,0 +1,66 @@
+# Data Sheet – Age-Perfect *Combined Face Dataset*  (v2.0 · June 2025)
+
+## 1 · Dataset Summary  
+* **Total size used in notebook:** **≈ 20 000 face images** with age labels.  
+* **Core source:** Public **UTKFace** dataset (ages 0-116).  
+* **Auxiliary sets (future multi-task heads):**  
+  * **FFHQ-Wrinkle** masks for wrinkle segmentation  
+  * **Roboflow “Face Dark Spots”** masks for pigmentation detection [oai_citation:0‡step we used for mdole age.docx](file-service://file-L7CT5Cq1mAZxw2hatagRh6)  
+* **Resolution after preprocessing:** 224 × 224 RGB.  
+* **Purpose:** Train and evaluate Age Perfect’s ordinal-regression age model; prepare groundwork for wrinkle/pigmentation heads.
+
+## 2 · Motivation  
+UTKFace gives real, consented photos covering a wide age span; by sampling ~20 K images we achieved the 4× data boost the notebook needed while staying within VRAM limits. Wrinkle & spot masks are planned for a future multitask upgrade. [oai_citation:1‡step we used for mdole age.docx](file-service://file-L7CT5Cq1mAZxw2hatagRh6)
+
+## 3 · Composition  
+
+| Sub-set | Images kept | Label(s) | Notes |
+|---------|------------:|----------|-------|
+| UTKFace | ≈ 20 000 | Age (years) + gender, ethnicity (unused) | After quality filter: clear frontal faces only |
+| FFHQ-Wrinkle | 1 024 | Binary wrinkle mask | Used for exploratory multi-task branch |
+| Roboflow Dark Spots | 732 | Pigmentation mask | Same as above |
+
+*Age distribution in the retained UTKFace subset (approx.):*  
+15 % 0-20 yr · 35 % 20-40 yr · 35 % 40-60 yr · 15 % 60+ yr.
+
+## 4 · Collection & Pre-processing  
+* Downloaded UTKFace/FFHQ/Roboflow sets locally (see notebook).  
+* Applied **center-crop & resize → 224 × 224**, pixel normalisation.  
+* Stratified split 70 / 15 / 15 % (train/val/test). [oai_citation:2‡step we used for mdole age.docx](file-service://file-L7CT5Cq1mAZxw2hatagRh6)  
+* On-the-fly aug: rotation ±10°, zoom ±10 %, brightness ±20 %.
+
+## 5 · Labels  
+* **Age:** integer ground-truth from UTKFace filename.  
+  * We treat it as *apparent* age, not legal proof.  
+* **Wrinkle / Spot masks:** per-pixel binaries from auxiliary sets.
+
+## 6 · Legal & Ethical  
+* UTKFace is free for academic use (faces shot in public with age/gender tags).  
+* All data remain local; images are **not redistributed** in this repo—only links.  
+* Do **NOT** use predictions for legal age verification or sensitive decisions.  
+* Dataset may carry demographic imbalance; monitor fairness on deployment.
+
+## 7 · Provenance & Access  
+Download scripts in `notebooks/age_predict.ipynb` pull original zips from:  
+* UTKFace: https://susanqq.github.io/UTKFace  
+* FFHQ-Wrinkle masks: https://github.com/yu4u/wide-resnet-keras (forked)  
+* Roboflow Dark Spots: https://universe.roboflow.com/…  
+
+The repo stores only SHA256 hashes to let others reproduce the exact subset.
+
+## 8 · Intended Uses  
+* ✅ Model training, research on age estimation / fairness  
+* ✅ Experimentation with multi-task skin-analysis heads  
+* ❌ Biometric ID, surveillance, or any use affecting legal rights
+
+## 9 · Maintenance  
+Quarterly checks (Mar • Jun • Sep • Dec).  
+Contact: yazdocapp@gmail.com.
+
+---
+
+### Changelog
+| Version | Date | Key changes |
+|---------|------|-------------|
+| **v2.0** | 2025-06-24 | Switched from 5 K synthetic faces to **20 K UTKFace** sample; added wrinkle & dark-spot masks. |
+| v1.0 | 2024-12-15 | Initial 5 000-image synthetic release. |
